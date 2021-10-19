@@ -1,37 +1,27 @@
 ---
-version: "3.7"
-
-# This docker-compose file is used to build and test the container
-
-secrets:
-  quote_txt:
-    file: ./src/secrets/quote.txt
+version: '3.8'
 
 services:
-  example:
-    # Run the container normally
-    build:
-      # VERSION must be specified on the command line:
-      # e.g., --build-arg VERSION=0.0.1
-      context: .
-      dockerfile: Dockerfile
-    image: cisagov/example
-    init: true
-    restart: "no"
-    environment:
-      - ECHO_MESSAGE=Hello World from docker-compose!
+  db:
+    image: postgres
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./data_schema.sql:/docker-entrypoint-initdb.d/data_schema.sql
     ports:
-      - target: 8080
-        published: 8080
-        protocol: tcp
-        mode: host
-    secrets:
-      - source: quote_txt
-        target: quote.txt
-
-  example-version:
-    # Run the container to collect version information
-    image: cisagov/example
-    init: true
-    restart: "no"
-    command: --version
+      - '5432:5432'
+    networks:
+      - backend
+    environment:
+      - POSTGRES_USER=${DBUSERNAME}
+      - POSTGRES_PASSWORD=${DBPASSWORD}
+  pe-reports:
+    build: ./
+    volumes:
+      - ./:/usr/src/pe-reports/
+    ports:
+      - '5000:5000'
+    networks:
+      - backend
+    environment:
+      PORT: 5000
+      FLASK_DEBUG: 1

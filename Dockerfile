@@ -22,17 +22,11 @@ ca-certificates \
 openssl \
 py-pip
 
-WORKDIR ${CISA_HOME}
-
-RUN wget -O sourcecode.tgz https://github.com/cisagov/skeleton-python-library/archive/v${VERSION}.tar.gz && \
-  tar xzf sourcecode.tgz --strip-components=1 && \
-  pip install --requirement requirements.txt && \
-  ln -snf /run/secrets/quote.txt src/example/data/secret.txt && \
-  rm sourcecode.tgz
-
-USER cisa
-
-EXPOSE 8080/TCP
-VOLUME ["/var/log"]
-ENTRYPOINT ["example"]
-CMD ["--log-level", "DEBUG"]
+RUN mkdir /usr/src/pe-reports/
+RUN git clone https://github.com/cisagov/pe-reports.git /usr/src/pe-reports/
+COPY pe-reports/app.py /usr/src/pe-reports/
+COPY pe-reports/requirements.txt /usr/src/pe-reports/
+WORKDIR /usr/src/pe-reports
+EXPOSE 5000
+RUN pip install -r requirements.txt
+CMD ["python", "app.py"]

@@ -22,40 +22,16 @@ appropriate for Docker containers and the major languages that we use.
 
 ### Running with Docker ###
 
-To run the `cisagov/example` image via Docker:
+To run this docker see command below. This docker will check to see if this
+docker exists locally and is running. If the docker image exists and
+containter is running no further action will be taken. If the docker image
+exists and the container is not running. The container will be started.
+If the docker does not exists the docker will be created and exectuted, when
+complete the shell of the container will be presented at the command line.
 
 ```console
-docker run cisagov/example:0.0.1
+python3 ./createDocker.py
 ```
-
-### Running with Docker Compose ###
-
-1. Create a `docker-compose.yml` file similar to the one below to use [Docker Compose](https://docs.docker.com/compose/).
-
-    ```yaml
-    ---
-    version: "3.7"
-
-    services:
-      example:
-        image: cisagov/example:0.0.1
-        volumes:
-          - type: bind
-            source: <your_log_dir>
-            target: /var/log
-        environment:
-          - ECHO_MESSAGE="Hello from docker-compose"
-        ports:
-          - target: 8080
-            published: 8080
-            protocol: tcp
-    ```
-
-1. Start the container and detach:
-
-    ```console
-    docker-compose up --detach
-    ```
 
 ## Using secrets with your container ##
 
@@ -69,34 +45,6 @@ environment variables.  See the
 
     ```text
     Better lock it in your pocket.
-    ```
-
-1. Then add the secret to your `docker-compose.yml` file:
-
-    ```yaml
-    ---
-    version: "3.7"
-
-    secrets:
-      quote_txt:
-        file: quote.txt
-
-    services:
-      example:
-        image: cisagov/example:0.0.1
-        volumes:
-          - type: bind
-            source: <your_log_dir>
-            target: /var/log
-        environment:
-          - ECHO_MESSAGE="Hello from docker-compose"
-        ports:
-          - target: 8080
-            published: 8080
-            protocol: tcp
-        secrets:
-          - source: quote_txt
-            target: quote.txt
     ```
 
 ## Updating your container ##
@@ -122,68 +70,6 @@ environment variables.  See the
     ```console
     docker stop <container_id>
     ```
-
-1. Pull the new image:
-
-    ```console
-    docker pull cisagov/example:0.0.1
-    ```
-
-1. Recreate and run the container by following the [previous instructions](#running-with-docker).
-
-## Image tags ##
-
-The images of this container are tagged with [semantic
-versions](https://semver.org) of the underlying example project that they
-containerize.  It is recommended that most users use a version tag (e.g.
-`:0.0.1`).
-
-| Image:tag | Description |
-|-----------|-------------|
-|`cisagov/example:1.2.3`| An exact release version. |
-|`cisagov/example:1.2`| The most recent release matching the major and minor version numbers. |
-|`cisagov/example:1`| The most recent release matching the major version number. |
-|`cisagov/example:edge` | The most recent image built from a merge into the `develop` branch of this repository. |
-|`cisagov/example:nightly` | A nightly build of the `develop` branch of this repository. |
-|`cisagov/example:latest`| The most recent release image pushed to a container registry.  Pulling an image using the `:latest` tag [should be avoided.](https://vsupalov.com/docker-latest-tag/) |
-
-See the [tags tab](https://hub.docker.com/r/cisagov/example/tags) on Docker
-Hub for a list of all the supported tags.
-
-## Volumes ##
-
-| Mount point | Purpose        |
-|-------------|----------------|
-| `/var/log`  |  Log storage   |
-
-## Ports ##
-
-The following ports are exposed by this container:
-
-| Port | Purpose        |
-|------|----------------|
-| 8080 | Example only; nothing is actually listening on the port |
-
-The sample [Docker composition](docker-compose.yml) publishes the
-exposed port at 8080.
-
-## Environment variables ##
-
-### Required ###
-
-There are no required environment variables.
-
-<!--
-| Name  | Purpose | Default |
-|-------|---------|---------|
-| `REQUIRED_VARIABLE` | Describe its purpose. | `null` |
--->
-
-### Optional ###
-
-| Name  | Purpose | Default |
-|-------|---------|---------|
-| `ECHO_MESSAGE` | Sets the message echoed by this container.  | `Hello World from Dockerfile` |
 
 ## Secrets ##
 
@@ -216,13 +102,7 @@ Docker:
     cd example
     ```
 
-1. Create the `Dockerfile-x` file with `buildx` platform support:
-
-    ```console
-    ./buildx-dockerfile.sh
-    ```
-
-1. Build the image using `buildx`:
+1. Build the image using `buildx` modify Dockerfile:
 
     ```console
     docker buildx build \

@@ -69,12 +69,19 @@ def is_container_running(container_name: str, image_name: str) -> Optional[bool]
 def createNewImage():
     """Take user input if "Y" and create a new container."""
     userAnswer = input(
-        f"Would you like to create a new container named {imageName}? y/N "
+        f"Would you like to create a new container named {imageName}? Y/N "
     )
-    if userAnswer == "Y":
+    if userAnswer == "Y" or "y":
+        login = os.getlogin()
+        #print(login)
+
         logging.info(f"Creating {imageName} image now")
+        #Check for directory existence
+        if not os.path.exists(f"/Users/{login}/Desktop/allinfo/"):
+            os.makedirs(f"/Users/{login}/Desktop/allinfo/pe-reports-docker/")
+
         os.system(  # nosec
-            f"docker build --no-cache -t {imageName} -f ~/Desktop/allinfo/pe-reports-docker/Dockerfile . && docker run -t -i -h {imageName} --name {dockerName} --mount type=bind,src=/Users/duhnc/Desktop/allInfo/pe-reports-docker/env,dst=/run/env {imageName} bash "
+            f"docker build --no-cache -t {imageName} -f /Users/{login}/Desktop/allinfo/pe-reports-docker/dockerfile . && docker run -t -i -h {imageName} --name {dockerName} --mount type=bind,src=/Users/{login}/Desktop/allInfo/pe-reports-docker/env,dst=/run/env {imageName} bash "
         )
     else:
         pass

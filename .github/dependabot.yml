@@ -1,7 +1,12 @@
 ---
 
-version: 2
+# Any ignore directives should be uncommented in downstream projects to disable
+# Dependabot updates for the given dependency. Downstream projects will get
+# these updates when the pull request(s) in the appropriate skeleton are merged
+# and Lineage processes these changes.
+
 updates:
+<<<<<<< HEAD
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
@@ -11,8 +16,32 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-
-  - package-ecosystem: "pip"
-    directory: "/"
+=======
+  - directory: /
+>>>>>>> ca49beaa65e53617b4414e4ab72d48a3d1deee62
+    # ignore:
+    #   # Managed by cisagov/skeleton-generic
+    #   - dependency-name: actions/cache
+    #   - dependency-name: actions/checkout
+    #   - dependency-name: actions/setup-go
+    #   - dependency-name: actions/setup-python
+    #   - dependency-name: crazy-max/ghaction-dump-context
+    #   - dependency-name: crazy-max/ghaction-github-labeler
+    #   - dependency-name: crazy-max/ghaction-github-status
+    #   - dependency-name: hashicorp/setup-terraform
+    #   - dependency-name: mxschmitt/action-tmate
+    #   - dependency-name: step-security/harden-runner
+    package-ecosystem: github-actions
     schedule:
-      interval: "weekly"
+      interval: weekly
+
+  - directory: /
+    package-ecosystem: pip
+    schedule:
+      interval: weekly
+
+  - directory: /
+    package-ecosystem: terraform
+    schedule:
+      interval: weekly
+version: 2
